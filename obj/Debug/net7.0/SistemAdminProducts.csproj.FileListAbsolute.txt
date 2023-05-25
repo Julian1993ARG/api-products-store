@@ -74,3 +74,5 @@ C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\obj\Debug\ne
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\obj\Debug\net7.0\SistemAdminProducts.pdb
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\obj\Debug\net7.0\SistemAdminProducts.genruntimeconfig.cache
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\obj\Debug\net7.0\ref\SistemAdminProducts.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\AutoMapper.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

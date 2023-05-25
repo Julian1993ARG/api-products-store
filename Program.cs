@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using SistemAdminProducts;
 using SistemAdminProducts.Models.Context;
+using SistemAdminProducts.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDdContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
 });
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+builder.Services.AddScoped<IProduct, ProductsRepository>();
 
 var app = builder.Build();
 
