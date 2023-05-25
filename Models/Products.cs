@@ -12,7 +12,8 @@ namespace SistemAdminProducts.Models
         [MinLength(5), MaxLength(500)]
         public string Decription { get; set; }
         [Required]
-        public int UpcCode { get; set; }
+        [MaxLength(13)]
+        public string UpcCode { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
     }

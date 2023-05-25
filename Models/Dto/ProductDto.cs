@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SistemAdminProducts.Models.Dto
 {
-    public class ProductUpdateDto
+    public class ProductDto
     {
+
         public int Id { get; set; }
         [Required]
         [MinLength(5), MaxLength(500)]
         public string Decription { get; set; }
         [Required]
-        [MaxLength(13)]
         public string UpcCode { get; set; }
     }
 }

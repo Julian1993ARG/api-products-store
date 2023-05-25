@@ -8,6 +8,7 @@ namespace SistemAdminProducts
     {
         public MapperConfig()
         {
+            CreateMap<Products,ProductDto>().ReverseMap();
             CreateMap<Products,ProductCreateDto>().ReverseMap();
             CreateMap<Products,ProductUpdateDto>().ReverseMap();
         }

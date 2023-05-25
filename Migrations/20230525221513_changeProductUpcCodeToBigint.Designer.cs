@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemAdminProducts.Models.Context;
 
@@ -11,9 +12,11 @@ using SistemAdminProducts.Models.Context;
 namespace SistemAdminProducts.Migrations
 {
     [DbContext(typeof(ApplicationDdContext))]
-    partial class ApplicationDdContextModelSnapshot : ModelSnapshot
+    [Migration("20230525221513_changeProductUpcCodeToBigint")]
+    partial class changeProductUpcCodeToBigint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,10 +41,8 @@ namespace SistemAdminProducts.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("UpcCode")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                    b.Property<long>("UpcCode")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");
