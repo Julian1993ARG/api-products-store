@@ -1,0 +1,19 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SistemAdminProducts.Models
+{
+    public class Products
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required]
+        [MinLength(5), MaxLength(500)]
+        public string Decription { get; set; }
+        [Required]
+        public int UpcCode { get; set; }
+        public DateTime CreateAt { get; set; } = DateTime.Now;
+        public DateTime UpdateAt { get; set; }
+    }
+}
