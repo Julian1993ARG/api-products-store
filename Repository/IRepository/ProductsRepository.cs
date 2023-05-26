@@ -12,13 +12,12 @@ namespace SistemAdminProducts.Repository.IRepository
         {
             _db = db;
         }
-        public Task<Products> Update(Products entidad)
+        public async Task Update(Products entidad)
         {
-            throw new NotImplementedException();
+            entidad.UpdateAt = DateTime.Now;
+            _db.Entry(entidad).State = EntityState.Modified;
+            await Save();
         }
-        public async Task<Products?> GetByUpcCode(string ucCode)
-        {
-            return await _db.Products.FirstOrDefaultAsync(v => v.UpcCode == ucCode);
-        }
+
     }
 }
