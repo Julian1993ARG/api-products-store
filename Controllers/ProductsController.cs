@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SistemAdminProducts.Models;
+using SistemAdminProducts.Models.Dto;
 using SistemAdminProducts.Repository.IRepository;
 using System.Net;
 
@@ -28,7 +29,7 @@ namespace SistemAdminProducts.Controllers
         {
             try
             {
-                _response.Data = await _productRepository.GetAll();
+                _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetAll());
                 _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
@@ -40,7 +41,7 @@ namespace SistemAdminProducts.Controllers
             return _response;
         }
 
-        [HttpGet("id:int", Name = "GetProductById")]
+        [HttpGet("id:int", Name = "GetProductBy")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -63,7 +64,42 @@ namespace SistemAdminProducts.Controllers
                     _response.ErrorMessage = new List<string> { "El producto no existe" };
                     return _response;
                 }
-                _response.Data = product;
+                _response.Data = _mapper.Map<ProductDto>(product);
+                _response.StatusCode = HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                _response.Ok = false;
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.ErrorMessage = new List<string> { ex.Message };
+            }
+            return _response;
+        }
+
+        [HttpGet("upc:string", Name = "GetProductByUpcCode")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<DefaultResponse> GetProductByUpcCode(string upcCode)
+        {
+            if (upcCode.GetType() != typeof(string))
+            {
+                _response.Ok = false;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.ErrorMessage = new List<string> { "El codigo debe ser un string" };
+                return _response;
+            }
+            try
+            {
+                var product = await _productRepository.Get(v => v.UpcCode == upcCode);
+                if (product == null)
+                {
+                    _response.Ok = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.ErrorMessage = new List<string> { "El producto no existe" };
+                    return _response;
+                }
+                _response.Data = _mapper.Map<ProductDto>(product);
                 _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
