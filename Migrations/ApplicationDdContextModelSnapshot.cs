@@ -40,8 +40,8 @@ namespace SistemAdminProducts.Migrations
 
                     b.Property<string>("UpcCode")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");

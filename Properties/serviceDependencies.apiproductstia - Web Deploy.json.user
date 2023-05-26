@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "apis1": {
+      "restored": true,
+      "restoreTime": "2023-05-26T18:38:13.7856568Z"
+    },
+    "mssql1": {
+      "restored": true,
+      "restoreTime": "2023-05-26T18:40:09.1645376Z"
+    }
+  },
+  "parameters": {
+    "apis1.resourceGroupName": {
+      "Name": "apis1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "SistemAdminProducts20230526134412ResourceGroup"
+    },
+    "apis1.subscriptionId": {
+      "Name": "apis1.subscriptionId",
+      "Type": "subscription",
+      "Value": "de31ecda-bd69-4c22-b2c7-f3664cd530f1"
+    }
+  }
+}
