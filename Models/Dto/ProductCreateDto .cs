@@ -12,6 +12,7 @@ namespace SistemAdminProducts.Models.Dto
         [MaxLength(20)]
         public string UpcCode { get; set; }
         public double Price { get; set; }
+        public int? SupplierId { get; set; }
 
     }
 }

@@ -15,6 +15,9 @@ namespace SistemAdminProducts.Models
         [MaxLength(20)]
         public string UpcCode { get; set; }
         public double Price { get; set; }
+        public int? SupplierId { get; set; }
+        [ForeignKey("SupplierId")]
+        public Supplier? Supplier { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
     }

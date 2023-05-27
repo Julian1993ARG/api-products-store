@@ -13,6 +13,7 @@ namespace SistemAdminProducts.Models.Dto
         [Required]
         public string UpcCode { get; set; }
         public double Price { get; set; }
+        public int? SupplierId { get; set; }
 
     }
 }

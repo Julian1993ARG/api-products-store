@@ -12,7 +12,7 @@ namespace SistemAdminProducts.Repository.IRepository
         {
             _db = db;
         }
-        public async Task Update(Products entidad)
+        public async Task Update(Supplier entidad)
         {
             entidad.UpdateAt = DateTime.Now;
             _db.Entry(entidad).State = EntityState.Modified;

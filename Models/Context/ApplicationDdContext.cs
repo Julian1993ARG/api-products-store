@@ -12,6 +12,8 @@ namespace SistemAdminProducts.Models.Context
         public DbSet<Supplier> Suppliers { get; set; }
         // Comando para ejecutar Migrate : Add-Migration InitialCreate
         // Comando para ejecutar Migrate : Update-Database
+        // Comando conectarse a la base de datos Azure
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
