@@ -80,3 +80,5 @@ C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\ne
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Ardalis.GuardClauses.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\JetBrains.Annotations.dll

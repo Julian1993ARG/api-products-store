@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Ardalis.GuardClauses;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
@@ -49,13 +50,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> GetSupplierById(int id)
         {
-            if(id.GetType() != typeof(int))
-            {
-                _response.Ok = false;
-                _response.StatusCode=HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El id debe ser un entero" };
-                return _response;
-            }
+            Guard.Against.NegativeOrZero(id, nameof(id));
             try
             {
                 var supplier = await _supplierRepository.Get(v => v.Id == id);
@@ -84,13 +79,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> DeleteSupplierById(int id)
         {
-            if (id.GetType() != typeof(int))
-            {
-                _response.Ok = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El id debe ser un entero" };
-                return _response;
-            }
+            Guard.Against.NegativeOrZero(id, nameof(id));
             try
             {
                 var supplier = await _supplierRepository.Get(p => p.Id == id);
@@ -159,13 +148,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> PutSupplierById(int id, [FromBody] SupplierUpdateDto supplierToUpdate)
         {
-            if (id.GetType() != typeof(int))
-            {
-                _response.Ok = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El id debe ser un entero" };
-                return _response;
-            }
+            Guard.Against.NegativeOrZero(id, nameof(id));
             if (!ModelState.IsValid)
             {
                 _response.Ok = false;

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Ardalis.GuardClauses;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
@@ -51,13 +52,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> GetProductById(int id)
         {
-            if(id.GetType() != typeof(int))
-            {
-                _response.Ok = false;
-                _response.StatusCode=HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El id debe ser un entero" };
-                return _response;
-            }
+            Guard.Against.NegativeOrZero(id, nameof(id));
             try
             {
                 var product = await _productRepository.Get(v => v.Id == id);
@@ -86,13 +81,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> GetProductByUpcCode(string upcCode)
         {
-            if (upcCode.GetType() != typeof(string))
-            {
-                _response.Ok = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El codigo debe ser un string" };
-                return _response;
-            }
+            Guard.Against.NullOrWhiteSpace(upcCode, nameof(upcCode));
             try
             {
                 var product = await _productRepository.Get(v => v.UpcCode == upcCode);
@@ -121,13 +110,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> GetProductsByDescription(string details)
         {
-            if(details.GetType() != typeof(string))
-            {
-                _response.Ok = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El detalle debe ser un string" };
-                return _response;
-            }
+           Guard.Against.NullOrWhiteSpace(details, nameof(details));
             if(details.Length < 3)
             {
                 _response.Ok = false;
@@ -137,16 +120,14 @@ namespace SistemAdminProducts.Controllers
             }
             try
             {
-                var products = await _productRepository.GetProductsByName(details);
-                
-                if(products.Count() == 0)
+                IEnumerable<Products> products = await _productRepository.GetProductsByName(details);
+                if(!products.Any())
                 {
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "No se encontraron productos" };
                     return _response;
                 }
-                //_response.Data = _mapper.Map<IEnumerable<ProductDto>>(products);
                 _response.Data = products;
                 _response.StatusCode = HttpStatusCode.OK;
             }
@@ -165,13 +146,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> DeleteProductById(int id)
         {
-            if (id.GetType() != typeof(int))
-            {
-                _response.Ok = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El id debe ser un entero" };
-                return _response;
-            }
+            Guard.Against.NegativeOrZero(id, nameof(id));
             try
             {
                 var product = await _productRepository.Get(p => p.Id == id);
@@ -201,13 +176,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> DeleteByUpcCode(string upc)
         {
-            if (upc.GetType() != typeof(int))
-            {
-                _response.Ok = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El upcCode debe ser string" };
-                return _response;
-            }
+            Guard.Against.NullOrWhiteSpace(upc, nameof(upc));
             try
             {
                 var product = await _productRepository.Get(p => p.UpcCode == upc);
@@ -277,13 +246,8 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> PutProductById(int id, [FromBody] ProductUpdateDto productToUpdate)
         {
-            if (id.GetType() != typeof(int))
-            {
-                _response.Ok = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessage = new List<string> { "El id debe ser un entero" };
-                return _response;
-            }
+            Guard.Against.NegativeOrZero(id, nameof(id));
+            Guard.Equals(productToUpdate.Id, id);
             if (!ModelState.IsValid)
             {
                 _response.Ok = false;
@@ -323,13 +287,12 @@ namespace SistemAdminProducts.Controllers
             return _response;
         }
 
-        // DELETEGATES METHODS
+        // DELEGATES METHODS
 
 
-        Func<IQueryable<Products>, int?, IQueryable<Products>> IncludeSupplier = (query, supplierId) =>
+        readonly Func<IQueryable<Products>, int?, IQueryable<Products>> IncludeSupplier = (query, supplierId) =>
             query.Include(product => product.Supplier)
-            //.Where(products => (products.Supplier != null && products.Supplier.Name != null && products.Supplier.Name.ToLower() == "arcor") || products.Supplier == null)
-            .Where(products => (products.Supplier != null && supplierId != null && products.SupplierId == supplierId))
+            .Where(products => (products.Supplier != null && supplierId != null && products.SupplierId == supplierId) || (supplierId == null && products.Supplier == products.Supplier))
             .Select(product => new Products
             {
                 Id = product.Id,
@@ -347,6 +310,5 @@ namespace SistemAdminProducts.Controllers
                     Email = product.Supplier.Email
                 } : null
             });
-
     }
 }
