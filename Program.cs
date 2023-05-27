@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDdContext>(option =>
 });
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddScoped<IProduct, ProductsRepository>();
+builder.Services.AddScoped<ISupplier, SupplierRepository>();
 
 var app = builder.Build();
 

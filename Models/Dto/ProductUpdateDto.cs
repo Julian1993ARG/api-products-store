@@ -10,7 +10,7 @@ namespace SistemAdminProducts.Models.Dto
         [MinLength(5), MaxLength(500)]
         public string Decription { get; set; }
         [Required]
-        [MaxLength()]
+        [MaxLength(20)]
         public string UpcCode { get; set; }
         public double Price { get; set; }
 

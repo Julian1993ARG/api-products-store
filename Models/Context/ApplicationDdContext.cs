@@ -9,6 +9,7 @@ namespace SistemAdminProducts.Models.Context
             
         }
         public DbSet<Products> Products { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
         // Comando para ejecutar Migrate : Add-Migration InitialCreate
         // Comando para ejecutar Migrate : Update-Database
 
