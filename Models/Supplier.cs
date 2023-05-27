@@ -11,11 +11,11 @@ namespace SistemAdminProducts.Models
         [MaxLength(150)]
         public string Name { get; set; }
         [MaxLength(150)]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         [MaxLength(255)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [MaxLength(500)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
 
