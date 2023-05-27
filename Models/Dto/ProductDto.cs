@@ -12,5 +12,7 @@ namespace SistemAdminProducts.Models.Dto
         public string Decription { get; set; }
         [Required]
         public string UpcCode { get; set; }
+        public double Price { get; set; }
+
     }
 }

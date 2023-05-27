@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemAdminProducts.Models.Context;
 
@@ -11,9 +12,11 @@ using SistemAdminProducts.Models.Context;
 namespace SistemAdminProducts.Migrations
 {
     [DbContext(typeof(ApplicationDdContext))]
-    partial class ApplicationDdContextModelSnapshot : ModelSnapshot
+    [Migration("20230526224852_descriptionIsIndex")]
+    partial class descriptionIsIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +40,6 @@ namespace SistemAdminProducts.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
 
                     b.Property<string>("UpcCode")
                         .IsRequired()

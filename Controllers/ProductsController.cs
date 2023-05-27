@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Dto;
@@ -112,6 +113,50 @@ namespace SistemAdminProducts.Controllers
             return _response;
         }
 
+        [HttpGet("details:string", Name = "GetProductsByDescription")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<DefaultResponse>> GetProductsByDescription(string details)
+        {
+            if(details.GetType() != typeof(string))
+            {
+                _response.Ok = false;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.ErrorMessage = new List<string> { "El detalle debe ser un string" };
+                return _response;
+            }
+            if(details.Length < 3)
+            {
+                _response.Ok = false;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.ErrorMessage = new List<string> { "El detalle debe tener al menos 3 caracteres" };
+                return _response;
+            }
+            try
+            {
+                var products = await _productRepository.GetProductsByName(details);
+                
+                if(products.Count() == 0)
+                {
+                    _response.Ok = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.ErrorMessage = new List<string> { "No se encontraron productos" };
+                    return _response;
+                }
+                //_response.Data = _mapper.Map<IEnumerable<ProductDto>>(products);
+                _response.Data = products;
+                _response.StatusCode = HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                _response.Ok = false;
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.ErrorMessage = new List<string> { ex.Message };
+            }
+            return _response;
+        }
+
         [HttpDelete("id:int", Name = "DeleteProductById")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -207,6 +252,7 @@ namespace SistemAdminProducts.Controllers
                     return _response;
                 }
                 var product = _mapper.Map<Products>(newProduct);
+                product.Decription = product.Decription.ToUpper();
                 product.CreateAt = DateTime.Now;
                 product.UpdateAt = DateTime.Now;
                 await _productRepository.Create(product);
@@ -274,5 +320,6 @@ namespace SistemAdminProducts.Controllers
             }
             return _response;
         }
+
     }
 }

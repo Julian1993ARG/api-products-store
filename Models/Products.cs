@@ -14,6 +14,7 @@ namespace SistemAdminProducts.Models
         [Required]
         [MaxLength(20)]
         public string UpcCode { get; set; }
+        public double Price { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
     }

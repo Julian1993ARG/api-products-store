@@ -17,6 +17,10 @@ namespace SistemAdminProducts.Models.Context
             modelBuilder.Entity<Products>()
                 .HasIndex(p => p.UpcCode)
                 .IsUnique();
+            modelBuilder.Entity<Products>()
+                .HasIndex(p => p.Decription)
+                .IsUnique();
+
         }
     }
 }

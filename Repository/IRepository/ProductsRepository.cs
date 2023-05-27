@@ -19,5 +19,17 @@ namespace SistemAdminProducts.Repository.IRepository
             await Save();
         }
 
+        public async Task<IEnumerable<Products>> GetProductsByName(string name)
+        {
+            name = name.ToUpper();
+            var products = await _db.Products
+                .Where(p => p.Decription
+                .ToUpper()
+                .Contains(name))
+                .Take(5)
+                .ToListAsync();
+            return products;
+        }
+
     }
 }

@@ -76,3 +76,7 @@ C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\obj\Debug\ne
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\obj\Debug\net7.0\ref\SistemAdminProducts.dll
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\AutoMapper.dll
 C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\Julia\source\repos\SistemAdminProducts\SistemAdminProducts\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll

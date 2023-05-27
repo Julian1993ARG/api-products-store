@@ -12,5 +12,7 @@ namespace SistemAdminProducts.Models.Dto
         [Required]
         [MaxLength()]
         public string UpcCode { get; set; }
+        public double Price { get; set; }
+
     }
 }
