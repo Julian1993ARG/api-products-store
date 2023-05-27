@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemAdminProducts.Models.Context;
 
@@ -11,9 +12,11 @@ using SistemAdminProducts.Models.Context;
 namespace SistemAdminProducts.Migrations
 {
     [DbContext(typeof(ApplicationDdContext))]
-    partial class ApplicationDdContextModelSnapshot : ModelSnapshot
+    [Migration("20230527151049_addCostPriceAndProffictPropertiProducts")]
+    partial class addCostPriceAndProffictPropertiProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +68,7 @@ namespace SistemAdminProducts.Migrations
                     b.HasIndex("UpcCode")
                         .IsUnique();
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Supplier", b =>
@@ -101,7 +104,7 @@ namespace SistemAdminProducts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Products", b =>

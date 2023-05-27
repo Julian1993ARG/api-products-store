@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SistemAdminProducts.Models
@@ -14,7 +15,10 @@ namespace SistemAdminProducts.Models
         [Required]
         [MaxLength(20)]
         public string UpcCode { get; set; }
-        public double Price { get; set; }
+        [DefaultValue(0.0)]
+        public double CostPrice { get; set; }
+        [DefaultValue(1.5)]
+        public double Proffit { get; set; }
         public int? SupplierId { get; set; }
         [ForeignKey("SupplierId")]
         public Supplier? Supplier { get; set; }

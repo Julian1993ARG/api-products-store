@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace SistemAdminProducts.Models.Dto
 {
@@ -12,8 +13,15 @@ namespace SistemAdminProducts.Models.Dto
         public string Decription { get; set; }
         [Required]
         public string UpcCode { get; set; }
-        public double Price { get; set; }
+        public double CostPrice { get; set; }
+        public double Proffit { get; set; }
+        public double SalePrice
+        {
+            get => Math.Round(CostPrice * Proffit, 2);
+            set { }
+        }
         public int? SupplierId { get; set; }
+        public Supplier Supplier { get; set; }
 
     }
 }

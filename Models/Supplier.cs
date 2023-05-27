@@ -16,7 +16,7 @@ namespace SistemAdminProducts.Models
         public string? Email { get; set; }
         [MaxLength(500)]
         public string? Address { get; set; }
-        public DateTime CreateAt { get; set; } = DateTime.Now;
+        public DateTime CreateAt { get; set; } 
         public DateTime UpdateAt { get; set; }
         public IEnumerable<Products>? Products { get; set; }
 

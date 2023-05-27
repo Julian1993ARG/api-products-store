@@ -7,7 +7,9 @@ namespace SistemAdminProducts.Repository.IRepository
         Task Save();
         Task Create(T entidad);
         Task Delete(T entidad);
-        Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null);
-        Task<T?> Get(Expression<Func<T, bool>> filter = null, bool tracked = true, params Expression<Func<T, object>>[] includes);
+        Task<List<T>> GetAll(Expression<Func<T, bool>> filter = null,
+                                 Func<IQueryable<T>, IQueryable<T>> include = null);
+        Task<T?> Get(Expression<Func<T, bool>> filter = null,
+                                 Func<IQueryable<T>, IQueryable<T>> include = null);
     }
 }

@@ -29,34 +29,40 @@ namespace MagicVilla.Reposiory
             await Save();
         }
 
-        public async Task<T?> Get(Expression<Func<T, bool>> filter = null, bool tracked = true, params Expression<Func<T, object>>[] includes)
+        public async Task<T?> Get(Expression<Func<T, bool>> filter = null,
+                                 Func<IQueryable<T>, IQueryable<T>> include = null)
         {
             IQueryable<T> query = dbSet;
-            if (!tracked)
-            {
-                query = query.AsNoTracking();
-            }
+            //if (!tracked)
+            //{
+            //    query = query.AsNoTracking();
+            //}
             if (filter != null)
             {
                 query = query.Where(filter);
             }
-            if (includes != null)
+            if (include != null)
             {
-                query = includes.Aggregate(query, (current, include) => current.Include(include));
+                query = include(query);
             }
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null)
+        public async Task<List<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IQueryable<T>> include = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
                 query = query.Where(filter);
             }
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
             return await query.ToListAsync();
         }
-
 
     }
 }

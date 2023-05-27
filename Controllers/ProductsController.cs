@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Dto;
 using SistemAdminProducts.Repository.IRepository;
@@ -27,11 +28,12 @@ namespace SistemAdminProducts.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<DefaultResponse>> GetProducts()
+        public async Task<ActionResult<DefaultResponse>> GetProducts([FromQuery] bool withSupplier = true, [FromQuery] int? supplierId = null)
         {
             try
             {
-                _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetAll());
+                if (withSupplier) _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetAll(include: query => IncludeSupplier(query, supplierId)));
+                else _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetAll());
                 _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
@@ -320,6 +322,31 @@ namespace SistemAdminProducts.Controllers
             }
             return _response;
         }
+
+        // DELETEGATES METHODS
+
+
+        Func<IQueryable<Products>, int?, IQueryable<Products>> IncludeSupplier = (query, supplierId) =>
+            query.Include(product => product.Supplier)
+            //.Where(products => (products.Supplier != null && products.Supplier.Name != null && products.Supplier.Name.ToLower() == "arcor") || products.Supplier == null)
+            .Where(products => (products.Supplier != null && supplierId != null && products.SupplierId == supplierId))
+            .Select(product => new Products
+            {
+                Id = product.Id,
+                Decription = product.Decription,
+                UpcCode = product.UpcCode,
+                CostPrice = product.CostPrice,
+                Proffit = product.Proffit,
+                SupplierId = product.SupplierId,
+                Supplier = product.Supplier != null ? new Supplier
+                {
+                    Id = product.Supplier.Id,
+                    Name = product.Supplier.Name,
+                    Address = product.Supplier.Address,
+                    Phone = product.Supplier.Phone,
+                    Email = product.Supplier.Email
+                } : null
+            });
 
     }
 }
