@@ -8,7 +8,7 @@ namespace SistemAdminProducts.Models.Dto
         public int Id { get; set; }
         [Required]
         [MinLength(5), MaxLength(500)]
-        public string Decription { get; set; }
+        public string Description { get; set; }
         [Required]
         [MaxLength(20)]
         public string UpcCode { get; set; }

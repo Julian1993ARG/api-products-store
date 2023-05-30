@@ -21,7 +21,7 @@ namespace SistemAdminProducts.Models.Context
                 .HasIndex(p => p.UpcCode)
                 .IsUnique();
             modelBuilder.Entity<Products>()
-                .HasIndex(p => p.Decription)
+                .HasIndex(p => p.Description)
                 .IsUnique();
 
         }

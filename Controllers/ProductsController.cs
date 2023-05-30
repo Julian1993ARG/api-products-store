@@ -17,12 +17,14 @@ namespace SistemAdminProducts.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProduct _productRepository;
+        private readonly ISupplier _supplierRepository;
         private readonly IMapper _mapper;
         protected DefaultResponse _response;
-        public ProductsController(IMapper mapper, IProduct product)
+        public ProductsController(IMapper mapper, ISupplier supplier, IProduct product)
         {
-            _mapper = mapper;
             _productRepository = product;
+            _supplierRepository = supplier;
+            _mapper = mapper;
             _response = new ();
         }
 
@@ -111,7 +113,7 @@ namespace SistemAdminProducts.Controllers
         public async Task<ActionResult<DefaultResponse>> GetProductsByDescription(string details)
         {
            Guard.Against.NullOrWhiteSpace(details, nameof(details));
-            if(details.Length < 3)
+            if (details.Length < 3)
             {
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
@@ -128,7 +130,7 @@ namespace SistemAdminProducts.Controllers
                     _response.ErrorMessage = new List<string> { "No se encontraron productos" };
                     return _response;
                 }
-                _response.Data = products;
+                _response.Data = _mapper.Map<IEnumerable<ProductDto>>(products);
                 _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
@@ -219,11 +221,11 @@ namespace SistemAdminProducts.Controllers
                 {
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.ErrorMessage = new List<string> { $"El UpcCode enviado ya esta registrado para el producto {existProduct.Decription}" };
+                    _response.ErrorMessage = new List<string> { $"El UpcCode enviado ya esta registrado para el producto {existProduct.Description}" };
                     return _response;
                 }
                 var product = _mapper.Map<Products>(newProduct);
-                product.Decription = product.Decription.ToUpper();
+                product.Description = product.Description.ToUpper();
                 product.CreateAt = DateTime.Now;
                 product.UpdateAt = DateTime.Now;
                 await _productRepository.Create(product);
@@ -270,13 +272,43 @@ namespace SistemAdminProducts.Controllers
                 {
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.ErrorMessage = new List<string> { $"El UpcCode enviado ya esta registrado para el producto {existProduct.Decription}" };
+                    _response.ErrorMessage = new List<string> { $"El UpcCode enviado ya esta registrado para el producto {existProduct.Description}" };
                     return _response;
                 }
                 product = _mapper.Map(productToUpdate, product);
                 await _productRepository.Update(product);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.Data = product;
+            }
+            catch (Exception ex)
+            {
+                _response.Ok = false;
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.ErrorMessage = new List<string> { ex.Message };
+            }
+            return _response;
+        }
+
+        [HttpPatch("idSupplier:int", Name ="PatchGrupPriceByParams")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<DefaultResponse>> PatchGrupPriceByParams(int idSupplier, [FromQuery] double percentage)
+        {
+            Guard.Against.NegativeOrZero(idSupplier, nameof(idSupplier));
+            Guard.Against.NegativeOrZero(percentage, nameof(percentage));
+            try
+            {
+                var supplier = await _supplierRepository.Get(s => s.Id == idSupplier);
+                if(supplier == null)
+                {
+                    _response.Ok = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.ErrorMessage = new List<string> { "El proveedor no existe" };
+                    return _response;
+                }
+                await  _productRepository.UpdateProductsPriceBySupplierId(idSupplier, percentage);
+                _response.Data = new List<string> { $"Todos los precios del proveedor {supplier.Name} fueron aumentados un {percentage}% " };
             }
             catch (Exception ex)
             {
@@ -296,7 +328,7 @@ namespace SistemAdminProducts.Controllers
             .Select(product => new Products
             {
                 Id = product.Id,
-                Decription = product.Decription,
+                Description = product.Description,
                 UpcCode = product.UpcCode,
                 CostPrice = product.CostPrice,
                 Proffit = product.Proffit,
@@ -310,5 +342,10 @@ namespace SistemAdminProducts.Controllers
                     Email = product.Supplier.Email
                 } : null
             });
+
+        // TODO: Ver la forma de implementar este metodo en IProducts
+        readonly Func<IQueryable<Products>, int, double, IQueryable<Products>> UpdateProductsPriceBySupplierId = (query, supplierId, percentage) =>
+        (IQueryable<Products>)query.Where(produt => produt.SupplierId == supplierId)
+        .ExecuteUpdateAsync(p => p.SetProperty(p => p.CostPrice,  p => p.CostPrice * percentage));
     }
 }

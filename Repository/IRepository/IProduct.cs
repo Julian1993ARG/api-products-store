@@ -6,5 +6,6 @@ namespace SistemAdminProducts.Repository.IRepository
     {
         Task Update(Products entidad);
         Task<IEnumerable<Products>> GetProductsByName(string details);
+        Task UpdateProductsPriceBySupplierId(int idSupplier, double percentage);
     }
 }

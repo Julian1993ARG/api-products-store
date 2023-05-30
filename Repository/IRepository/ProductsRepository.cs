@@ -19,11 +19,18 @@ namespace SistemAdminProducts.Repository.IRepository
             await Save();
         }
 
+        public async Task UpdateProductsPriceBySupplierId(int supplierId, double percentage)
+        {
+            percentage = percentage / 100 + 1;
+            await _db.Products.Where(produt => produt.SupplierId == supplierId)
+                .ExecuteUpdateAsync(p => p.SetProperty(p => p.CostPrice, p => p.CostPrice * percentage));
+        }
+
         public async Task<IEnumerable<Products>> GetProductsByName(string name)
         {
             name = name.ToUpper();
             var products = await _db.Products
-                .Where(p => p.Decription
+                .Where(p => p.Description
                 .ToUpper()
                 .Contains(name))
                 .Take(5)

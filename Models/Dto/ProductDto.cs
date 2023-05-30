@@ -6,14 +6,15 @@ namespace SistemAdminProducts.Models.Dto
 {
     public class ProductDto
     {
+        private double _costPrice;
 
         public int Id { get; set; }
         [Required]
         [MinLength(5), MaxLength(500)]
-        public string Decription { get; set; }
+        public string Description { get; set; }
         [Required]
         public string UpcCode { get; set; }
-        public double CostPrice { get; set; }
+        public double CostPrice { get => Math.Round(_costPrice, 2); set => _costPrice = value; }
         public double Proffit { get; set; }
         public double SalePrice
         {
