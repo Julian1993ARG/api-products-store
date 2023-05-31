@@ -40,8 +40,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
         [HttpGet("id:int", Name = "GetSupplierById")]
@@ -59,7 +60,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "Proveedor no encontrado" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 _response.Data = _mapper.Map<SupplierDto>(supplier);
                 _response.StatusCode = HttpStatusCode.OK;
@@ -69,8 +70,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
         [HttpDelete("id:int", Name = "DeleteSupplierById")]
@@ -88,7 +90,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "Proveedor no encontrado" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 await _supplierRepository.Delete(supplier);
                 _response.StatusCode = HttpStatusCode.NoContent;
@@ -99,8 +101,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
         [HttpPost]
@@ -113,7 +116,7 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
-                return _response;
+                return BadRequest(_response);
             }
             try
             {
@@ -123,7 +126,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.ErrorMessage = new List<string> { $"El proveedor {newSupplier.Name} ya esta registrado" };
-                    return _response;
+                    return BadRequest(_response);
                 }
                 var supplier = _mapper.Map<Supplier>(newSupplier);
                 supplier.CreateAt = DateTime.Now;
@@ -137,9 +140,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
-                return _response;
+                return StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
         [HttpPut("id:int", Name = "PutSupplierById")]
@@ -154,7 +157,7 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
-                return _response;
+                return BadRequest(_response);
             }
             try
             {
@@ -164,7 +167,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "El proveedor no existe" };
-                    return _response;
+                    return NotFound(_response);
                 }
 
                 supplier = _mapper.Map<Supplier>(supplierToUpdate);
@@ -177,8 +180,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
     }

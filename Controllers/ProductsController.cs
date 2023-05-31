@@ -1,8 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts.Models;
@@ -44,8 +41,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
         [HttpGet("id:int", Name = "GetProductBy")]
@@ -63,7 +61,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "El producto no existe" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 _response.Data = _mapper.Map<ProductDto>(product);
                 _response.StatusCode = HttpStatusCode.OK;
@@ -73,8 +71,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
         [HttpGet("upc:string", Name = "GetProductByUpcCode")]
@@ -92,7 +91,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "El producto no existe" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 _response.Data = _mapper.Map<ProductDto>(product);
                 _response.StatusCode = HttpStatusCode.OK;
@@ -102,8 +101,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return Ok(_response);
         }
 
         [HttpGet("details:string", Name = "GetProductsByDescription")]
@@ -118,7 +118,7 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.ErrorMessage = new List<string> { "El detalle debe tener al menos 3 caracteres" };
-                return _response;
+                return BadRequest(_response);
             }
             try
             {
@@ -128,7 +128,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "No se encontraron productos" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 _response.Data = _mapper.Map<IEnumerable<ProductDto>>(products);
                 _response.StatusCode = HttpStatusCode.OK;
@@ -138,8 +138,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return StatusCode(200, _response);
         }
 
         [HttpDelete("id:int", Name = "DeleteProductById")]
@@ -157,7 +158,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "El producto no existe" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 await _productRepository.Delete(product);
                 _response.StatusCode = HttpStatusCode.NoContent;
@@ -168,8 +169,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return StatusCode(204, _response);
         }
 
         [HttpDelete("upc:string", Name = "DeleteByUpcCode")]
@@ -187,7 +189,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "El producto no existe" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 await _productRepository.Delete(product);
                 _response.StatusCode = HttpStatusCode.NoContent;
@@ -198,8 +200,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return StatusCode(204, _response);
         }
 
         [HttpPost]
@@ -212,7 +215,7 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
-                return _response;
+                return BadRequest(_response);
             }
             try
             {
@@ -222,10 +225,12 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.ErrorMessage = new List<string> { $"El UpcCode enviado ya esta registrado para el producto {existProduct.Description}" };
-                    return _response;
+                    return BadRequest(_response);
                 }
                 var product = _mapper.Map<Products>(newProduct);
-                product.Description = product.Description.ToUpper();
+                product.Description = product.Description.ToUpper().Trim();
+                product.UpcCode = product.UpcCode.Trim();
+                product.Proffit = (product.Proffit / 100) + 1;
                 product.CreateAt = DateTime.Now;
                 product.UpdateAt = DateTime.Now;
                 await _productRepository.Create(product);
@@ -237,9 +242,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
-                return _response;
+                return StatusCode(500, _response);
             }
-            return _response;
+            return StatusCode(201, _response);
         }
 
         [HttpPut("id:int", Name = "PutProductById")]
@@ -255,7 +260,7 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
-                return _response;
+                return BadRequest(_response);
             }
             try
             {
@@ -265,7 +270,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.ErrorMessage = new List<string> { "El producto no existe" };
-                    return _response;
+                    return NotFound(_response);
                 }
                 var existProduct = await _productRepository.Get(p => p.UpcCode == productToUpdate.UpcCode);
                 if (existProduct != null && existProduct.Id != id)
@@ -273,7 +278,7 @@ namespace SistemAdminProducts.Controllers
                     _response.Ok = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.ErrorMessage = new List<string> { $"El UpcCode enviado ya esta registrado para el producto {existProduct.Description}" };
-                    return _response;
+                    return BadRequest(_response);
                 }
                 product = _mapper.Map(productToUpdate, product);
                 await _productRepository.Update(product);
@@ -285,8 +290,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return StatusCode(204,_response);
         }
 
         [HttpPatch("idSupplier:int", Name ="PatchGrupPriceByParams")]
@@ -315,8 +321,9 @@ namespace SistemAdminProducts.Controllers
                 _response.Ok = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessage = new List<string> { ex.Message };
+                return StatusCode(500, _response);
             }
-            return _response;
+            return StatusCode(204,_response);
         }
 
         // DELEGATES METHODS
