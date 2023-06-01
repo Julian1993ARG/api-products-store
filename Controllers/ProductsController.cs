@@ -40,8 +40,9 @@ namespace SistemAdminProducts.Controllers
             Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
             try
             {
-                if (withSupplier) _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize, 
-                    include: q => IncludeSupplier(q, supplierId)
+                if (withSupplier) _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize,
+                    filter: q => (supplierId != null) ? q.Where(p => p.SupplierId == supplierId) : q,
+                    include: q => IncludeSupplier(q)
                     ));
                 else _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize));
                 _response.StatusCode = HttpStatusCode.OK;
@@ -339,9 +340,9 @@ namespace SistemAdminProducts.Controllers
         // DELEGATES METHODS
 
         // Esta funcion permite traer los productos por proveedor o los productos de un proveedor
-        readonly Func<IQueryable<Products>, int?, IQueryable<Products>> IncludeSupplier = (query, supplierId) =>
+        readonly Func<IQueryable<Products>, IQueryable<Products>> IncludeSupplier = (query) =>
             query.Include(product => product.Supplier)
-            .Where(products => (products.Supplier != null && supplierId != null && products.SupplierId == supplierId) || (supplierId == null && products.Supplier == products.Supplier))
+            //.Where(products => (products.Supplier != null && supplierId != null && products.SupplierId == supplierId) || (supplierId == null && products.Supplier == products.Supplier))
             .Select(product => new Products
             {
                 Id = product.Id,
