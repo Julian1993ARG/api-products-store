@@ -30,6 +30,7 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> GetSuppliers()
         {
+            await Console.Out.WriteLineAsync("Pidiendo los suppliers");
             try
             {
                 _response.Data = _mapper.Map<IEnumerable<SupplierDto>>(await _supplierRepository.GetAll());

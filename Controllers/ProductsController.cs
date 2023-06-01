@@ -6,6 +6,7 @@ using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Dto;
 using SistemAdminProducts.Repository.IRepository;
 using System.Net;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SistemAdminProducts.Controllers
 {
@@ -28,12 +29,21 @@ namespace SistemAdminProducts.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<DefaultResponse>> GetProducts([FromQuery] bool withSupplier = true, [FromQuery] int? supplierId = null)
+        public async Task<ActionResult<DefaultResponse>> GetProducts(
+            [FromQuery] bool withSupplier = true, 
+            [FromQuery] int? supplierId = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10
+            )
         {
+            Guard.Against.NegativeOrZero(page, nameof(page));
+            Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
             try
             {
-                if (withSupplier) _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetAll(include: query => IncludeSupplier(query, supplierId)));
-                else _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetAll());
+                if (withSupplier) _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize, 
+                    include: q => IncludeSupplier(q, supplierId)
+                    ));
+                else _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize));
                 _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
@@ -328,7 +338,7 @@ namespace SistemAdminProducts.Controllers
 
         // DELEGATES METHODS
 
-
+        // Esta funcion permite traer los productos por proveedor o los productos de un proveedor
         readonly Func<IQueryable<Products>, int?, IQueryable<Products>> IncludeSupplier = (query, supplierId) =>
             query.Include(product => product.Supplier)
             .Where(products => (products.Supplier != null && supplierId != null && products.SupplierId == supplierId) || (supplierId == null && products.Supplier == products.Supplier))
@@ -351,6 +361,7 @@ namespace SistemAdminProducts.Controllers
             });
 
         // TODO: Ver la forma de implementar este metodo en IProducts
+        // Esta funcion permite hacer modificaciones de precio en masa
         readonly Func<IQueryable<Products>, int, double, IQueryable<Products>> UpdateProductsPriceBySupplierId = (query, supplierId, percentage) =>
         (IQueryable<Products>)query.Where(produt => produt.SupplierId == supplierId)
         .ExecuteUpdateAsync(p => p.SetProperty(p => p.CostPrice,  p => p.CostPrice * percentage));

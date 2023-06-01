@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Context;
+using System.Linq.Expressions;
 
 namespace SistemAdminProducts.Repository.IRepository
 {
@@ -37,6 +38,32 @@ namespace SistemAdminProducts.Repository.IRepository
                 .ToListAsync();
             return products;
         }
+
+        public async Task<IEnumerable<Products>> GetPaginateProduts(int page, int pageSize, Expression<Func<Products, bool>> filter = null, Func<IQueryable<Products>, IQueryable<Products>> include = null)
+        {
+            IQueryable<Products> products = _db.Set<Products>();
+            if (filter != null)
+            {
+                products = products.Where(filter);
+            }
+            if (include != null)
+            {
+                products = include(products);
+            }
+            try
+            {
+                return await products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("Error al obtener productos paginados: " + ex.Message);
+                return Enumerable.Empty<Products>();
+            };
+          
+        }
+
+        
 
     }
 }
