@@ -19,10 +19,17 @@ namespace SistemAdminProducts.Models
         public double CostPrice { get; set; }
         [DefaultValue(1.5)]
         public double Proffit { get; set; }
-        public int? SupplierId { get; set; }
         [ForeignKey("SupplierId")]
-        public Supplier? Supplier { get; set; }
+        public int SupplierId { get; set; }
+        [ForeignKey("CategoryId")]
+        public int CategoryId { get; set; }
+        [ForeignKey("SubCategoryId")]
+        public int SubCategoryId { get; set; }
+        public Supplier Supplier { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
+
+        public Category Category { get; set; }
+        public SubCategory SubCategory { get; set; }
     }
 }

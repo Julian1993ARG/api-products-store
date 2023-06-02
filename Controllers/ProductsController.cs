@@ -6,7 +6,6 @@ using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Dto;
 using SistemAdminProducts.Repository.IRepository;
 using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SistemAdminProducts.Controllers
 {
@@ -342,7 +341,6 @@ namespace SistemAdminProducts.Controllers
         // Esta funcion permite traer los productos por proveedor o los productos de un proveedor
         readonly Func<IQueryable<Products>, IQueryable<Products>> IncludeSupplier = (query) =>
             query.Include(product => product.Supplier)
-            //.Where(products => (products.Supplier != null && supplierId != null && products.SupplierId == supplierId) || (supplierId == null && products.Supplier == products.Supplier))
             .Select(product => new Products
             {
                 Id = product.Id,

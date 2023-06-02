@@ -18,7 +18,7 @@ namespace SistemAdminProducts.Models
         public string? Address { get; set; }
         public DateTime CreateAt { get; set; } 
         public DateTime UpdateAt { get; set; }
-        public IEnumerable<Products>? Products { get; set; }
+        public IEnumerable<Products> Products { get; set; }
 
     }
 }
