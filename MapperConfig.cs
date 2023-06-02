@@ -15,6 +15,10 @@ namespace SistemAdminProducts
             CreateMap<Supplier,SupplierDto>().ReverseMap();
             CreateMap<Supplier,SupplierCreateDto>().ReverseMap();
             CreateMap<Supplier,SupplierUpdateDto>().ReverseMap();
+
+            CreateMap<Category,CategoryDto>().ReverseMap();
+
+            CreateMap<SubCategory,SubCategoryDto>().ReverseMap();
         }
     }
 }

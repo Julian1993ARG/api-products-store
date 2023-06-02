@@ -39,7 +39,13 @@ namespace SistemAdminProducts.Repository.IRepository
             return products;
         }
 
-        public async Task<IEnumerable<Products>> GetPaginateProduts(int page, int pageSize, Func<IQueryable<Products>, IQueryable<Products>> filter = null, Func<IQueryable<Products>, IQueryable<Products>> include = null)
+        public async Task<IEnumerable<Products>> GetPaginateProduts(
+            int page, int pageSize,
+            Func<IQueryable<Products>, 
+                IQueryable<Products>> filter = null,
+            Func<IQueryable<Products>,
+                IQueryable<Products>> include = null
+            )
         {
             IQueryable<Products> products = _db.Set<Products>();
             if (filter != null)

@@ -21,15 +21,11 @@ namespace SistemAdminProducts.Models
         public double Proffit { get; set; }
         [ForeignKey("SupplierId")]
         public int SupplierId { get; set; }
-        [ForeignKey("CategoryId")]
-        public int CategoryId { get; set; }
         [ForeignKey("SubCategoryId")]
         public int SubCategoryId { get; set; }
-        public Supplier Supplier { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
-
-        public Category Category { get; set; }
-        public SubCategory SubCategory { get; set; }
+        public virtual Supplier Supplier { get; set; } = null!;
+        public virtual SubCategory SubCategory { get; set; } = null!;
     }
 }

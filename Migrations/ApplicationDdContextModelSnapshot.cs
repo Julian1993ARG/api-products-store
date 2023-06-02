@@ -48,7 +48,7 @@ namespace SistemAdminProducts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Products", b =>
@@ -104,7 +104,7 @@ namespace SistemAdminProducts.Migrations
                     b.HasIndex("UpcCode")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.SubCategory", b =>
@@ -138,7 +138,7 @@ namespace SistemAdminProducts.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategory");
+                    b.ToTable("SubCategory", (string)null);
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Supplier", b =>
@@ -174,7 +174,7 @@ namespace SistemAdminProducts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Products", b =>

@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace SistemAdminProducts.Models
 {
-    public class Supplier
+    public partial class Supplier
     {
+        public Supplier()
+        {
+            Products = new HashSet<Products>();
+        }
         [Key]
         [Required]
         public int Id { get; set; }
@@ -18,7 +23,7 @@ namespace SistemAdminProducts.Models
         public string? Address { get; set; }
         public DateTime CreateAt { get; set; } 
         public DateTime UpdateAt { get; set; }
-        public IEnumerable<Products> Products { get; set; }
+        public virtual ICollection<Products> Products { get; set; }
 
     }
 }

@@ -22,7 +22,9 @@ namespace SistemAdminProducts.Models.Dto
             set { }
         }
         public int? SupplierId { get; set; }
-        public Supplier Supplier { get; set; }
+
+        public SupplierDto? Supplier { get; set; }
+        public SubCategoryDto? SubCategory { get; set; }
 
     }
 }

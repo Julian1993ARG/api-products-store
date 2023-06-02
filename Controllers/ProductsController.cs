@@ -45,6 +45,7 @@ namespace SistemAdminProducts.Controllers
                     ));
                 else _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize));
                 _response.StatusCode = HttpStatusCode.OK;
+                await Console.Out.WriteLineAsync(_response.Data.ToString());
             }
             catch (Exception ex)
             {
@@ -340,7 +341,7 @@ namespace SistemAdminProducts.Controllers
 
         // Esta funcion permite traer los productos por proveedor o los productos de un proveedor
         readonly Func<IQueryable<Products>, IQueryable<Products>> IncludeSupplier = (query) =>
-            query.Include(product => product.Supplier)
+            query.Include(product => product.Supplier).Include(product => product.SubCategory).ThenInclude(SubCategory => SubCategory.Category)
             .Select(product => new Products
             {
                 Id = product.Id,
@@ -349,14 +350,21 @@ namespace SistemAdminProducts.Controllers
                 CostPrice = product.CostPrice,
                 Proffit = product.Proffit,
                 SupplierId = product.SupplierId,
-                Supplier = product.Supplier != null ? new Supplier
+                Supplier = product.Supplier,
+                CreateAt = product.CreateAt,
+                UpdateAt = product.UpdateAt,
+                SubCategory = new SubCategory
                 {
-                    Id = product.Supplier.Id,
-                    Name = product.Supplier.Name,
-                    Address = product.Supplier.Address,
-                    Phone = product.Supplier.Phone,
-                    Email = product.Supplier.Email
-                } : null
+                    Id = product.SubCategory.Id,
+                    Name = product.SubCategory.Name,
+                    CategoryId = product.SubCategory.CategoryId,
+                    Category = new Category
+                    {
+                        Id = product.SubCategory.Category.Id,
+                        Name = product.SubCategory.Category.Name
+                    }
+                }
+                
             });
 
         // TODO: Ver la forma de implementar este metodo en IProducts

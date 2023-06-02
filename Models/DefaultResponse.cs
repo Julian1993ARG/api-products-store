@@ -2,7 +2,7 @@
 
 namespace SistemAdminProducts.Models
 {
-    public class DefaultResponse
+    public class DefaultResponse 
     {
         public HttpStatusCode StatusCode { get; set; }
         public bool Ok { get; set; } = true;

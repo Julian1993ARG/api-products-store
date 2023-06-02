@@ -3,8 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SistemAdminProducts.Models
 {
-    public class SubCategory
+    public partial class SubCategory
     {
+        public SubCategory()
+        {
+            Products = new HashSet<Products>();
+        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -18,7 +22,7 @@ namespace SistemAdminProducts.Models
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
 
-        public Category? Category { get; set; }
-        public IEnumerable<Products>? Products { get; set; }
+        public virtual Category Category { get; set; }
+        public virtual ICollection<Products>? Products { get; set; }
     }
 }
