@@ -8,6 +8,6 @@ namespace SistemAdminProducts.Repository.IRepository
         Task Update(Products entidad);
         Task<IEnumerable<Products>> GetProductsByName(string details);
         Task UpdateProductsPriceBySupplierId(int idSupplier, double percentage);
-        Task<IEnumerable<Products>> GetPaginateProduts(int page, int pageSize, Func<IQueryable<Products>, IQueryable<Products>> filter = null, Func<IQueryable<Products>, IQueryable<Products>> include = null);
+        Task<(IEnumerable<Products> items, int totalPages, int totalRecords)> GetPaginateProduts(int page, int pageSize, Func<IQueryable<Products>, IQueryable<Products>> filter = null, Func<IQueryable<Products>, IQueryable<Products>> include = null);
     }
 }

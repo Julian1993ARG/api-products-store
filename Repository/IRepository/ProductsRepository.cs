@@ -39,7 +39,7 @@ namespace SistemAdminProducts.Repository.IRepository
             return products;
         }
 
-        public async Task<IEnumerable<Products>> GetPaginateProduts(
+        public async Task<(IEnumerable<Products> items, int totalPages, int totalRecords)> GetPaginateProduts(
             int page, int pageSize,
             Func<IQueryable<Products>, 
                 IQueryable<Products>> filter = null,
@@ -48,23 +48,22 @@ namespace SistemAdminProducts.Repository.IRepository
             )
         {
             IQueryable<Products> products = _db.Set<Products>();
-            if (filter != null)
-            {
-                products = filter(products);
-            }
-            if (include != null)
-            {
-                products = include(products);
-            }
+            if (filter != null) products = filter(products);
+            
+            if (include != null) products = include(products);
+            
             try
             {
-                return await products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                IEnumerable<Products> items = await products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                int totalRecords = await products.CountAsync();
+                int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                return (items, totalPages, totalRecords);
             }
             catch (Exception ex)
             {
 
                 Console.WriteLine("Error al obtener productos paginados: " + ex.Message);
-                return Enumerable.Empty<Products>();
+                return (Enumerable.Empty<Products>(), 0, 0);
             };
           
         }

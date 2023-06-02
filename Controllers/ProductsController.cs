@@ -29,7 +29,6 @@ namespace SistemAdminProducts.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DefaultResponse>> GetProducts(
-            [FromQuery] bool withSupplier = true, 
             [FromQuery] int? supplierId = null,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10
@@ -39,11 +38,12 @@ namespace SistemAdminProducts.Controllers
             Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
             try
             {
-                if (withSupplier) _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize,
+                var (items, totalPages, totalRecords) = await _productRepository.GetPaginateProduts(page, pageSize,
                     filter: q => (supplierId != null) ? q.Where(p => p.SupplierId == supplierId) : q,
-                    include: q => IncludeSupplier(q)
-                    ));
-                else _response.Data = _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetPaginateProduts(page, pageSize));
+                    include: q => IncludeSupplier(q));
+                _response.TotalPages = totalPages;
+                _response.TotalRecords = totalRecords;
+                _response.Data = _mapper.Map<IEnumerable<ProductDto>>(items);
                 _response.StatusCode = HttpStatusCode.OK;
                 await Console.Out.WriteLineAsync(_response.Data.ToString());
             }

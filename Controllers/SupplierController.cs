@@ -1,8 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Dto;
