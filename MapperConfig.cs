@@ -20,6 +20,8 @@ namespace SistemAdminProducts
             CreateMap<Category,CategoryCreateDto>().ReverseMap();
             CreateMap<Category,CategoryDto>().ReverseMap();
 
+            CreateMap<SubCategory,SubCategoryUpdateDto>().ReverseMap();
+            CreateMap<SubCategory,SubCategoryCreateDto>().ReverseMap();
             CreateMap<SubCategory,SubCategoryDto>().ReverseMap();
         }
     }

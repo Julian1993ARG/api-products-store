@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts;
 using SistemAdminProducts.Models.Context;
+using SistemAdminProducts.Repository;
 using SistemAdminProducts.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,14 +13,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDdContext>(option =>
-{
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
-});
+builder.Services.AddDbContext<ApplicationDdContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddScoped<IProduct, ProductsRepository>();
 builder.Services.AddScoped<ISupplier, SupplierRepository>();
 builder.Services.AddScoped<ICategory, CategoryRepository>();
+builder.Services.AddScoped<ISubCategory, SubCategoryRepository>();
+
 
 var app = builder.Build();
 

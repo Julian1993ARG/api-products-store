@@ -24,7 +24,7 @@ namespace SistemAdminProducts.Models.Dto
         public int? SupplierId { get; set; }
 
         public SupplierDto? Supplier { get; set; }
-        public SubCategoryDto? SubCategory { get; set; }
+        public SubCategoryUpdateDto? SubCategory { get; set; }
 
     }
 }

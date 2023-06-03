@@ -2,17 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Context;
+using SistemAdminProducts.Repository.IRepository;
 
-namespace SistemAdminProducts.Repository.IRepository
+namespace SistemAdminProducts.Repository
 {
-    public class SupplierRepository : Repository<Supplier>, ISupplier
+    public class CategoryRepository : Repository<Category>, ICategory
     {
         private readonly ApplicationDdContext _db;
-        public SupplierRepository(ApplicationDdContext db) : base(db)
+        public CategoryRepository(ApplicationDdContext db) : base(db)
         {
             _db = db;
         }
-        public async Task Update(Supplier entidad)
+        public async Task Update(Category entidad)
         {
             entidad.UpdateAt = DateTime.Now;
             _db.Entry(entidad).State = EntityState.Modified;

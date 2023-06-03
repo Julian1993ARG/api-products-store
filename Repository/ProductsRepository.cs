@@ -2,9 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts.Models;
 using SistemAdminProducts.Models.Context;
+using SistemAdminProducts.Repository.IRepository;
 using System.Linq.Expressions;
 
-namespace SistemAdminProducts.Repository.IRepository
+namespace SistemAdminProducts.Repository
 {
     public class ProductsRepository : Repository<Products>, IProduct
     {
@@ -41,7 +42,7 @@ namespace SistemAdminProducts.Repository.IRepository
 
         public async Task<(IEnumerable<Products> items, int totalPages, int totalRecords)> GetPaginateProduts(
             int page, int pageSize,
-            Func<IQueryable<Products>, 
+            Func<IQueryable<Products>,
                 IQueryable<Products>> filter = null,
             Func<IQueryable<Products>,
                 IQueryable<Products>> include = null
@@ -49,9 +50,9 @@ namespace SistemAdminProducts.Repository.IRepository
         {
             IQueryable<Products> products = _db.Set<Products>();
             if (filter != null) products = filter(products);
-            
+
             if (include != null) products = include(products);
-            
+
             try
             {
                 IEnumerable<Products> items = await products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -65,10 +66,10 @@ namespace SistemAdminProducts.Repository.IRepository
                 Console.WriteLine("Error al obtener productos paginados: " + ex.Message);
                 return (Enumerable.Empty<Products>(), 0, 0);
             };
-          
+
         }
 
-        
+
 
     }
 }
