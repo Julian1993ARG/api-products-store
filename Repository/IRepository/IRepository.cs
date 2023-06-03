@@ -10,6 +10,6 @@ namespace SistemAdminProducts.Repository.IRepository
         Task<List<T>> GetAll(Expression<Func<T, bool>> filter = null,
                                  Func<IQueryable<T>, IQueryable<T>> include = null);
         Task<T?> Get(Expression<Func<T, bool>> filter = null,
-                                 Func<IQueryable<T>, IQueryable<T>> include = null);
+                                 Func<IQueryable<T>, IQueryable<T>> include = null, bool traked = true);
     }
 }

@@ -30,21 +30,19 @@ namespace MagicVilla.Reposiory
         }
 
         public async Task<T?> Get(Expression<Func<T, bool>> filter = null,
-                                 Func<IQueryable<T>, IQueryable<T>> include = null)
+                                 Func<IQueryable<T>, IQueryable<T>> include = null,
+                                  bool tracked = true   
+            )
         {
             IQueryable<T> query = dbSet;
-            //if (!tracked)
-            //{
-            //    query = query.AsNoTracking();
-            //}
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
+            if (!tracked) query = query.AsNoTracking();
+            
+            if (filter != null) query = query.Where(filter);
+
             if (include != null)
-            {
+            
                 query = include(query);
-            }
+            
             return await query.FirstOrDefaultAsync();
         }
 
