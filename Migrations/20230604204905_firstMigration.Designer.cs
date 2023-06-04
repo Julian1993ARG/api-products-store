@@ -12,8 +12,8 @@ using SistemAdminProducts.Models.Context;
 namespace SistemAdminProducts.Migrations
 {
     [DbContext(typeof(ApplicationDdContext))]
-    [Migration("20230602005804_notNullCategorySubCategorySupplier")]
-    partial class notNullCategorySubCategorySupplier
+    [Migration("20230604204905_firstMigration")]
+    partial class firstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,7 +62,7 @@ namespace SistemAdminProducts.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<double>("CostPrice")
@@ -182,11 +182,9 @@ namespace SistemAdminProducts.Migrations
 
             modelBuilder.Entity("SistemAdminProducts.Models.Products", b =>
                 {
-                    b.HasOne("SistemAdminProducts.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SistemAdminProducts.Models.Category", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("SistemAdminProducts.Models.SubCategory", "SubCategory")
                         .WithMany("Products")
@@ -199,8 +197,6 @@ namespace SistemAdminProducts.Migrations
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("SubCategory");
 
@@ -220,6 +216,8 @@ namespace SistemAdminProducts.Migrations
 
             modelBuilder.Entity("SistemAdminProducts.Models.Category", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("SubCategories");
                 });
 

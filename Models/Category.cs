@@ -16,6 +16,7 @@ namespace SistemAdminProducts.Models
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; }
 
-        public ICollection<SubCategory>? SubCategories { get; set; }
+        public ICollection<SubCategory> SubCategories { get; set; }
+        public ICollection<Products> Products { get; set; }
     }
 }

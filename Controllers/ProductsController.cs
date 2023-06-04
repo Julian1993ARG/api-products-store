@@ -3,8 +3,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts.Models;
+using SistemAdminProducts.Models.Context;
 using SistemAdminProducts.Models.Dto;
 using SistemAdminProducts.Repository.IRepository;
+using System.Linq;
 using System.Net;
 
 namespace SistemAdminProducts.Controllers
@@ -16,13 +18,15 @@ namespace SistemAdminProducts.Controllers
         private readonly IProduct _productRepository;
         private readonly ISupplier _supplierRepository;
         private readonly IMapper _mapper;
+        private readonly ApplicationDdContext _db;
         protected DefaultResponse _response;
-        public ProductsController(IMapper mapper, ISupplier supplier, IProduct product)
+        public ProductsController(IMapper mapper, ISupplier supplier, IProduct product, ApplicationDdContext context)
         {
             _productRepository = product;
             _supplierRepository = supplier;
             _mapper = mapper;
             _response = new ();
+            _db = context;
         }
 
         [HttpGet]
@@ -38,14 +42,30 @@ namespace SistemAdminProducts.Controllers
             Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
             try
             {
-                var (items, totalPages, totalRecords) = await _productRepository.GetPaginateProduts(page, pageSize,
-                    filter: q => (supplierId != null) ? q.Where(p => p.SupplierId == supplierId) : q,
-                    include: q => IncludeSupplier(q));
-                _response.TotalPages = totalPages;
-                _response.TotalRecords = totalRecords;
-                _response.Data = _mapper.Map<IEnumerable<ProductDto>>(items);
+                var products = _db.Set<Products>();
+                if (supplierId != null) products.Where(p => p.SupplierId == supplierId);
+                products.Select(p => new
+                {
+                    p.Id,
+                    p.Description,
+                    p.Proffit,
+                    p.CostPrice,
+                    p.UpcCode,
+                    p.SupplierId,
+                    SalePrice = Math.Round(p.CostPrice * p.Proffit, 2),
+                    Supplier = new { p.Supplier.Id, p.Supplier.Name },
+                    SubCategory = new
+                    {
+                        p.SubCategory.Id,
+                        p.SubCategory.Name,
+                        Category = new { p.SubCategory.Category.Id, p.SubCategory.Category.Name }
+                    }
+                });
+                _response.TotalRecords = await products.CountAsync();
+                _response.TotalPages = (int)Math.Ceiling((double)_response.TotalRecords / pageSize);
+                 var response = await products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                _response.Data = response;
                 _response.StatusCode = HttpStatusCode.OK;
-                await Console.Out.WriteLineAsync(_response.Data.ToString());
             }
             catch (Exception ex)
             {
@@ -336,41 +356,5 @@ namespace SistemAdminProducts.Controllers
             }
             return StatusCode(204,_response);
         }
-
-        // DELEGATES METHODS
-
-        // Esta funcion permite traer los productos por proveedor o los productos de un proveedor
-        readonly Func<IQueryable<Products>, IQueryable<Products>> IncludeSupplier = (query) =>
-            query.Include(product => product.Supplier).Include(product => product.SubCategory).ThenInclude(SubCategory => SubCategory.Category)
-            .Select(product => new Products
-            {
-                Id = product.Id,
-                Description = product.Description,
-                UpcCode = product.UpcCode,
-                CostPrice = product.CostPrice,
-                Proffit = product.Proffit,
-                SupplierId = product.SupplierId,
-                Supplier = product.Supplier,
-                CreateAt = product.CreateAt,
-                UpdateAt = product.UpdateAt,
-                SubCategory = new SubCategory
-                {
-                    Id = product.SubCategory.Id,
-                    Name = product.SubCategory.Name,
-                    CategoryId = product.SubCategory.CategoryId,
-                    Category = new Category
-                    {
-                        Id = product.SubCategory.Category.Id,
-                        Name = product.SubCategory.Category.Name
-                    }
-                }
-                
-            });
-
-        // TODO: Ver la forma de implementar este metodo en IProducts
-        // Esta funcion permite hacer modificaciones de precio en masa
-        readonly Func<IQueryable<Products>, int, double, IQueryable<Products>> UpdateProductsPriceBySupplierId = (query, supplierId, percentage) =>
-        (IQueryable<Products>)query.Where(produt => produt.SupplierId == supplierId)
-        .ExecuteUpdateAsync(p => p.SetProperty(p => p.CostPrice,  p => p.CostPrice * percentage));
     }
 }

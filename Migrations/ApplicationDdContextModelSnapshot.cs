@@ -48,7 +48,33 @@ namespace SistemAdminProducts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(93),
+                            Description = "Description Category 1",
+                            Name = "Category 1",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(94)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(96),
+                            Description = "Description Category 2",
+                            Name = "Category 2",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(97)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(98),
+                            Description = "Description Category 3",
+                            Name = "Category 3",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(99)
+                        });
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Products", b =>
@@ -59,7 +85,7 @@ namespace SistemAdminProducts.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<double>("CostPrice")
@@ -104,7 +130,45 @@ namespace SistemAdminProducts.Migrations
                     b.HasIndex("UpcCode")
                         .IsUnique();
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CostPrice = 10.5,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(354),
+                            Description = "Product 1",
+                            Proffit = 1.5,
+                            SubCategoryId = 1,
+                            SupplierId = 1,
+                            UpcCode = "4314556",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(355)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CostPrice = 10.5,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(358),
+                            Description = "Product 2",
+                            Proffit = 1.5,
+                            SubCategoryId = 2,
+                            SupplierId = 2,
+                            UpcCode = "31467885",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(359)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CostPrice = 10.5,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(361),
+                            Description = "Product 3",
+                            Proffit = 1.5,
+                            SubCategoryId = 3,
+                            SupplierId = 3,
+                            UpcCode = "12345623",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(361)
+                        });
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.SubCategory", b =>
@@ -138,7 +202,36 @@ namespace SistemAdminProducts.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategory", (string)null);
+                    b.ToTable("SubCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(298),
+                            Description = "Description SubCategory 1",
+                            Name = "SubCategory 1",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(300)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(302),
+                            Description = "Description SubCategory 2",
+                            Name = "SubCategory 2",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(302)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 3,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(304),
+                            Description = "Description SubCategory 3",
+                            Name = "SubCategory 3",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(305)
+                        });
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Supplier", b =>
@@ -174,16 +267,37 @@ namespace SistemAdminProducts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(327),
+                            Name = "Supplier 1",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(328)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(329),
+                            Name = "Supplier 2",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(330)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(331),
+                            Name = "Supplier 3",
+                            UpdateAt = new DateTime(2023, 6, 4, 18, 33, 6, 445, DateTimeKind.Local).AddTicks(331)
+                        });
                 });
 
             modelBuilder.Entity("SistemAdminProducts.Models.Products", b =>
                 {
-                    b.HasOne("SistemAdminProducts.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SistemAdminProducts.Models.Category", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("SistemAdminProducts.Models.SubCategory", "SubCategory")
                         .WithMany("Products")
@@ -196,8 +310,6 @@ namespace SistemAdminProducts.Migrations
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("SubCategory");
 
@@ -217,6 +329,8 @@ namespace SistemAdminProducts.Migrations
 
             modelBuilder.Entity("SistemAdminProducts.Models.Category", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("SubCategories");
                 });
 
