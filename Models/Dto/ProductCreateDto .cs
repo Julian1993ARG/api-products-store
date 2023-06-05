@@ -15,7 +15,8 @@ namespace SistemAdminProducts.Models.Dto
         public double CostPrice { get; set; } = 0; 
         public double Proffit { get; set; } = 1.5;
 
-        public int? SupplierId { get; set; }
+        public int SupplierId { get; set; }
+        public int SubCategoryId { get; set; }
 
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SistemAdminProducts.Models;
+using SistemAdminProducts.Models.Context;
 using SistemAdminProducts.Models.Dto;
 using SistemAdminProducts.Repository.IRepository;
 using System.Net;
@@ -14,11 +16,13 @@ namespace SistemAdminProducts.Controllers
     {
         private readonly ICategory _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly ApplicationDdContext _db;
         protected DefaultResponse _response;
-        public CategoryController(IMapper mapper, ICategory category)
+        public CategoryController(IMapper mapper, ICategory category, ApplicationDdContext db)
         {
             _mapper = mapper;
             _categoryRepository = category;
+            _db = db;
             _response = new ();
         }
 
@@ -29,7 +33,14 @@ namespace SistemAdminProducts.Controllers
         {
             try
             {
-                _response.Data = _mapper.Map<IEnumerable<CategoryDto>>(await _categoryRepository.GetAll());
+                var category = _db.Set<Category>();
+                var data = await category.Select(c => new 
+                {
+                   c.Id,
+                   c.Name,
+                   SubCategories = c.SubCategories.Select(sb => new  { sb.Id, sb.Name }).ToList(),
+                }).ToListAsync();
+                _response.Data = data;
                 _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
